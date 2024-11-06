@@ -93,8 +93,8 @@ public class SecurityConfiguration {
         return http.securityMatcher(CONFIG.getApiMapping() + "/**")
             .csrf(k -> k.disable())
             .sessionManagement(k -> k.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilter(new BasicAuthenticationFilter(apiAuthenticationManager, apiAuthenticationManager))
-            .authorizeHttpRequests(k -> k.anyRequest().authenticated())
+            // .addFilter(new BasicAuthenticationFilter(apiAuthenticationManager, apiAuthenticationManager))
+            // .authorizeHttpRequests(k -> k.anyRequest().authenticated())
             .build();
     }
 }
