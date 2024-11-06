@@ -98,8 +98,8 @@ public enum SteveConfiguration {
                    .build();
 
         webApi = WebApi.builder()
-                       .headerKey(p.getOptionalString("webapi.key"))
-                       .headerValue(p.getOptionalString("webapi.value"))
+                    //    .headerKey(p.getOptionalString("webapi.key"))
+                    //    .headerValue(p.getOptionalString("webapi.value"))
                        .build();
 
         ocpp = Ocpp.builder()
