@@ -22,13 +22,15 @@ import de.rwth.idsg.steve.ocpp.CommunicationTask;
 import de.rwth.idsg.steve.ocpp.OcppCallback;
 import de.rwth.idsg.steve.ocpp.OcppVersion;
 import de.rwth.idsg.steve.web.dto.ocpp.RemoteStopTransactionParams;
-
+import lombok.extern.slf4j.Slf4j;
 import jakarta.xml.ws.AsyncHandler;
+
 
 /**
  * @author Sevket Goekay <sevketgokay@gmail.com>
  * @since 09.03.2018
  */
+@Slf4j
 public class RemoteStopTransactionTask extends CommunicationTask<RemoteStopTransactionParams, String> {
 
     public RemoteStopTransactionTask(OcppVersion ocppVersion, RemoteStopTransactionParams params) {
@@ -57,7 +59,6 @@ public class RemoteStopTransactionTask extends CommunicationTask<RemoteStopTrans
         return new ocpp.cp._2015._10.RemoteStopTransactionRequest()
                 .withTransactionId(params.getTransactionId());
     }
-
     @Override
     public AsyncHandler<ocpp.cp._2010._08.RemoteStopTransactionResponse> getOcpp12Handler(String chargeBoxId) {
         return res -> {

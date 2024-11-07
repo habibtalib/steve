@@ -2,19 +2,6 @@
  * SteVe - SteckdosenVerwaltung - https://github.com/steve-community/steve
  * Copyright (C) 2013-2024 SteVe Community Team
  * All Rights Reserved.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package de.rwth.idsg.steve.ocpp.task;
 
@@ -22,13 +9,19 @@ import de.rwth.idsg.steve.ocpp.CommunicationTask;
 import de.rwth.idsg.steve.ocpp.OcppCallback;
 import de.rwth.idsg.steve.ocpp.OcppVersion;
 import de.rwth.idsg.steve.web.dto.ocpp.RemoteStartTransactionParams;
+import lombok.extern.slf4j.Slf4j;
+import ocpp.cp._2015._10.ChargingProfile;
+import ocpp.cp._2015._10.ChargingProfileKindType;
+import ocpp.cp._2015._10.ChargingProfilePurposeType;
+import ocpp.cp._2015._10.ChargingRateUnitType;
+import ocpp.cp._2015._10.ChargingSchedule;
+import ocpp.cp._2015._10.ChargingSchedulePeriod;
 
 import jakarta.xml.ws.AsyncHandler;
+import java.math.BigDecimal;
+import java.util.Collections;
 
-/**
- * @author Sevket Goekay <sevketgokay@gmail.com>
- * @since 09.03.2018
- */
+@Slf4j
 public class RemoteStartTransactionTask extends CommunicationTask<RemoteStartTransactionParams, String> {
 
     public RemoteStartTransactionTask(OcppVersion ocppVersion, RemoteStartTransactionParams params) {
@@ -54,14 +47,33 @@ public class RemoteStartTransactionTask extends CommunicationTask<RemoteStartTra
                 .withConnectorId(params.getConnectorId());
     }
 
-    /**
-     * TODO: RemoteStartTransactionRequest.chargingProfile not implemented
-     */
     @Override
     public ocpp.cp._2015._10.RemoteStartTransactionRequest getOcpp16Request() {
-        return new ocpp.cp._2015._10.RemoteStartTransactionRequest()
+        ocpp.cp._2015._10.RemoteStartTransactionRequest request = new ocpp.cp._2015._10.RemoteStartTransactionRequest()
                 .withIdTag(params.getIdTag())
                 .withConnectorId(params.getConnectorId());
+
+        if (params.getChargingDuration() != null) {
+            ChargingSchedulePeriod period = new ChargingSchedulePeriod()
+                .withStartPeriod(0)
+                .withLimit(new BigDecimal("32.0"));
+
+            ChargingSchedule schedule = new ChargingSchedule()
+                .withDuration((Integer) params.getChargingDuration())
+                .withChargingRateUnit(ChargingRateUnitType.W)
+                .withChargingSchedulePeriod(Collections.singletonList(period));
+
+            ChargingProfile profile = new ChargingProfile()
+                .withChargingProfileId(1)
+                .withStackLevel(0)
+                .withChargingProfilePurpose(ChargingProfilePurposeType.TX_PROFILE)
+                .withChargingProfileKind(ChargingProfileKindType.ABSOLUTE)
+                .withChargingSchedule(schedule);
+            
+            request.setChargingProfile(profile);
+        }
+
+        return request;
     }
 
     @Override
@@ -85,7 +97,6 @@ public class RemoteStartTransactionTask extends CommunicationTask<RemoteStartTra
             }
         };
     }
-
 
     @Override
     public AsyncHandler<ocpp.cp._2015._10.RemoteStartTransactionResponse> getOcpp16Handler(String chargeBoxId) {

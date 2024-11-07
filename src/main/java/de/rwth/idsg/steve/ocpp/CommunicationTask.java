@@ -198,4 +198,11 @@ public abstract class CommunicationTask<S extends ChargePointSelection, RESPONSE
             addNewResponse(chargeBoxId, response);
         }
     }
-}
+/*************  ✨ Codeium Command ⭐  *************/
+        /**
+         * Called when operation fails with exception
+         *
+         * @param chargeBoxId    the {@link ChargeBox} ID
+         * @param exception      the exception
+         */
+/******  c03f7601-c081-483b-a085-4a21541cdbda  *******/}

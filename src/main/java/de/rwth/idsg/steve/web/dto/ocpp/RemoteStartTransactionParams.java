@@ -50,4 +50,9 @@ public class RemoteStartTransactionParams extends SingleChargePointSelect {
             this.connectorId = connectorId;
         }
     }
+
+    public Object getChargingDuration() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getChargingDuration'");
+    }
 }
